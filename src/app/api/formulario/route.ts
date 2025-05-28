@@ -36,12 +36,14 @@ export async function POST(req: Request) {
       },
     });
 
-    await prisma.pergunta3TiposSeguro.create({
-      data: {
-        participanteId,
-        resposta: data.tipoSeguro,
-      },
-    });
+    if (data.tipoSeguro) {
+        await prisma.pergunta3TiposSeguro.create({
+          data: {
+            participanteId,
+            resposta: data.tipoSeguro,
+          },
+        });
+      }
 
     await prisma.pergunta4UsouAplicativos.create({
       data: {
@@ -71,14 +73,14 @@ export async function POST(req: Request) {
       },
     });
 
-    if (data.tipoSeguro) {
-      await prisma.pergunta3TiposSeguro.create({
-        data: {
-          participanteId,
-          resposta: data.tipoSeguro,
-        },
-      });
-    }
+    
+    await prisma.pergunta8SabeUsarApp.create({
+          data: {
+            participanteId,
+            resposta: data.saberUsaApp,
+          },
+    });
+    
 
     await prisma.pergunta9Funcionalidades.create({
       data: {
@@ -105,9 +107,10 @@ export async function POST(req: Request) {
       message: 'Participante e respostas criados com sucesso!',
     });
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Erro ao criar participante:', error);
-    }
+    
+    console.error('Erro ao criar participante:', error instanceof Error ? error.message : error);
+
+    
 
     return NextResponse.json(
       { error: 'Erro ao salvar dados' },
