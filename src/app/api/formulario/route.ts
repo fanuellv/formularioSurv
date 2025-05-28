@@ -74,12 +74,14 @@ export async function POST(req: Request) {
     });
 
     
-    await prisma.pergunta8SabeUsarApp.create({
+    if (data.saberUsaApp) {
+        await prisma.pergunta8SabeUsarApp.create({
           data: {
             participanteId,
             resposta: data.saberUsaApp,
           },
-    });
+        });
+      }
     
 
     await prisma.pergunta9Funcionalidades.create({
