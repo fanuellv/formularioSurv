@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { TbSelector } from "react-icons/tb";
 
-interface FormData {
+export interface FormDataId {
     nome: string;
     faixaEtaria: number;
     genero: string;
@@ -13,7 +13,7 @@ interface FormData {
   }
   
   interface Props {
-    onAvancar: (dados: FormData) => void;
+    onAvancar: (dados: FormDataId) => void;
     
   }
 
@@ -75,7 +75,7 @@ export default function Identificacao({ onAvancar }: Props) {
             htmlFor="faixa"
             className="text-[#0153A5] uppercase text-sm font-bold"
           >
-            Faixa etária
+            {formData.faixaEtaria} anos
           </label>
           <div className="flex items-center gap-4">
             <input

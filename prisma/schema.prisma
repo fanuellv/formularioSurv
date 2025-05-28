@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Participante {
+  id          Int     @id @default(autoincrement())
+  nome        String  @db.VarChar(100)
+  faixa_etaria Int
+  genero      String  @db.VarChar(50)
+  email       String  @db.VarChar(100)
+  telefone    String  @db.VarChar(50)
+  provincia   String  @db.VarChar(50)
+ 
+ pergunta1    Pergunta1Familiaridade[]
+  pergunta2    Pergunta2PossuiSeguro[]
+  pergunta3    Pergunta3TiposSeguro[]
+  pergunta4    Pergunta4UsouAplicativos[]
+  pergunta5    Pergunta5AplicativosUsa[]
+  pergunta6    Pergunta6AppComparar[]
+  pergunta7    Pergunta7FrequenciaUso[]
+  pergunta8    Pergunta8SabeUsarApp[]
+  pergunta9    Pergunta9Funcionalidades[]
+  pergunta10   Pergunta10Recomendar[]
+  pergunta11   Pergunta11TestesMediaseg[]
+}
+
+model Pergunta1Familiaridade {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+
+model Pergunta2PossuiSeguro {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta3TiposSeguro {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta4UsouAplicativos {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta5AplicativosUsa {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta6AppComparar {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta7FrequenciaUso {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta8SabeUsarApp {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta9Funcionalidades {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta10Recomendar {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}
+
+model Pergunta11TestesMediaseg {
+  id              Int           @id @default(autoincrement())
+  participante    Participante  @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+  participanteId  Int
+  resposta        String
+  data_resposta   DateTime      @default(now())
+}

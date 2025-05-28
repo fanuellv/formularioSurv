@@ -7,7 +7,7 @@ interface Opcao {
   icon?: React.ReactNode;
 }
 
-interface Props {
+export interface Props {
   pergunta: string;
   opcoes: Opcao[];
   onAvancar: (resposta: string) => void;
@@ -24,10 +24,12 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
         const enviarResposta = () => {
           if (campoTexto) {
             if (respostaTexto.trim() !== "") {
+              console.log("Enviando texto:", respostaTexto.trim());
               onAvancar(respostaTexto.trim());
             }
           } else {
             if (respostaSelecionada !== null) {
+              console.log("Enviando opção:", opcoes![respostaSelecionada].texto);
               onAvancar(opcoes![respostaSelecionada].texto);
             }
           }
@@ -74,8 +76,8 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
       <button
        disabled={
         campoTexto
-          ? respostaTexto.trim() === "" && respostaSelecionada === null
-          : respostaSelecionada === null
+    ? respostaTexto.trim() === ""  // só depende do texto
+    : respostaSelecionada === null
       }
         onClick={enviarResposta}
         className="bg-[#0153a5] font-bold text-white px-12 py-4 rounded disabled:bg-gray-400"

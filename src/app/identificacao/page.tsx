@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 
 import Pergunta from "@/app/components/quiz";
-import Identificacao from "@/app/components/identificacao";
+import Identificacao, { FormDataId } from "@/app/components/identificacao";
 
 type FormData = {
   nome?: string;
@@ -19,7 +19,18 @@ type FormData = {
   telefone?: string;
   provincia?: string;
   familiaridade?: string;
+  possuiSeguro?: string;
+  tipoSeguro?: string;
+  usaPlataformas?: string;
+  usaFinanceiros?: string;
+  usariaApp?: string;
+  frequenciaPesquisa?: string;
+  sabeUsarApp?: string;
+  funcionalidadesDesejadas?: string;
+  recomendarApp?: string;
+  querParticipar?: string;
 };
+
 
 export default function Home() {
   const [passoAtual, setPassoAtual] = useState(1);
@@ -28,22 +39,70 @@ export default function Home() {
 
   const [temSeguro, setTemSeguro] = useState<string | null>(null);
 
-  const avancar = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passoAtual < 12) {
-      setPassoAtual((prev) => prev + 1);
-    } else {
-      console.log("Dados enviados:", formData);
-      alert("Formulário enviado com sucesso!");
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 🔒 Impede o reload da página
+  
+    try {
+      const response = await fetch("/api/formulario", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert("Formulário enviado com sucesso!");
+        console.log("Dados enviados:", result);
+        // Redirecionar ou mostrar tela de sucesso aqui, se quiser
+        // NÃO usar setPassoAtual(1) aqui, a menos que queira reiniciar tudo
+      } else {
+        alert("Erro ao enviar: " + result.error);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar:", error);
+      alert("Erro inesperado.");
     }
   };
+  
+
+  const avancar = async () => {
+    if (passoAtual < 12) {
+      setPassoAtual(passoAtual + 1);
+    } else {
+      try {
+        const response = await fetch("/api/formulario", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          alert("Formulário enviado com sucesso!");
+          console.log("Dados salvos:", result);
+          // Aqui você pode limpar ou redirecionar
+        } else {
+          alert("Erro ao enviar: " + result.error);
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro inesperado");
+      }
+    }
+  }
+  ;
 
   const salvarResposta = (campo: keyof FormData, resposta: string | number) => {
     setFormData((prev) => ({
       ...prev,
       [campo]: resposta,
     }));
-    setPassoAtual((prev) => prev + 1);
   };
 
   return (
@@ -59,12 +118,12 @@ export default function Home() {
         ))}
       </div>
 
-      <form onSubmit={avancar} className="w-full max-w-2xl space-y-6">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-6">
         {passoAtual === 1 && (
           <Identificacao
-            onAvancar={(dados: FormData) => {
+            onAvancar={(dados: FormDataId) => {
               setFormData((prev) => ({ ...prev, ...dados }));
-              setPassoAtual((prev) => prev + 1);
+              setPassoAtual(2);
             }}
           />
         )}
@@ -81,57 +140,62 @@ export default function Home() {
               { texto: "Tenho alguma noção", icon: <FaRegLightbulb /> },
               { texto: "Entendo bem", icon: <FaCheckCircle /> },
             ]}
-            onAvancar={(resposta) => salvarResposta("familiaridade", resposta)}
-            onVoltar={() => setPassoAtual((prev) => Math.max(prev - 1, 1))}
+            onAvancar={(resposta) => {
+              salvarResposta("familiaridade", resposta);
+              setPassoAtual(3);
+            }}
+            onVoltar={() => setPassoAtual(1)}
           />
         )}
-        {passoAtual === 3 && (
-          <>
-            {!mostrarPerguntaExtra && (
-              <Pergunta
-                pergunta="Você possui seguro?"
-                opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
-                onAvancar={(resposta) => {
-                  setTemSeguro(resposta);
-                  if (resposta === "Sim") {
-                    setMostrarPerguntaExtra(true); // mostra a pergunta extra
-                  } else {
-                    setPassoAtual(4); // segue direto
-                  }
-                }}
-                onVoltar={() => setPassoAtual(2)}
-              />
-            )}
+       {passoAtual === 3 && (
+  <>
+    {!mostrarPerguntaExtra ? (
+      <Pergunta
+        pergunta="Você possui seguro?"
+        opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
+        onAvancar={(resposta) => {
+          salvarResposta("possuiSeguro", resposta);
+          if (resposta === "Sim") {
+            setMostrarPerguntaExtra(true);
+          } else {
+            setPassoAtual(4); // pula para próxima pergunta direto
+          }
+        }}
+        onVoltar={() => setPassoAtual(2)}
+      />
+    ) : (
+      <Pergunta
+        pergunta="Qual tipo de seguro você possui?"
+        opcoes={[
+          { texto: "Seguro de Vida" },
+          { texto: "Seguro Automóvel" },
+          { texto: "Seguro Saúde" },
+        ]}
+        onAvancar={(resposta) => {
+          salvarResposta("tipoSeguro", resposta);
+          setMostrarPerguntaExtra(false);
+          setPassoAtual(4);
+        }}
+        onVoltar={() => {
+          setMostrarPerguntaExtra(false);
+          setPassoAtual(3);
+        }}
+        campoTexto
+        placeholderTexto="Indique o tipo de seguro..."
+      />
+    )}
+  </>
+)}
 
-            {temSeguro === "Sim" && mostrarPerguntaExtra && (
-              <Pergunta
-                pergunta="Qual tipo de seguro você possui?"
-                opcoes={[
-                  { texto: "Seguro de Vida" },
-                  { texto: "Seguro Automóvel" },
-                  { texto: "Seguro Saúde" },
-                ]}
-                onAvancar={(resposta) => {
-                  salvarResposta("familiaridade", resposta);
-                  setPassoAtual(4); // agora sim avança
-                }}
-                onVoltar={() => {
-                  setMostrarPerguntaExtra(false);
-                  setTemSeguro(null);
-                }}
-                campoTexto
-                placeholderTexto="Indique o tipo de seguro..."
-              />
-            )}
-          </>
-        )}
+
+
 
         {passoAtual === 4 && (
           <Pergunta
             pergunta="Você já usou aplicativos ou plataformas online para contratar ou comparar seguros?"
             opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("usaPlataformas", resposta);
               setPassoAtual(5);
             }}
             onVoltar={() => {
@@ -147,7 +211,7 @@ export default function Home() {
             pergunta="Costuma usar aplicativos para contratar ou comparar outros serviços financeiros (como bancos, crédito, investimentos)?"
             opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("usaFinanceiros", resposta);
               setPassoAtual(6);
             }}
             onVoltar={() => setPassoAtual(4)}
@@ -163,7 +227,7 @@ export default function Home() {
               { texto: "Não usaria" },
             ]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("usariaApp", resposta);
               setPassoAtual(7);
             }}
             onVoltar={() => setPassoAtual(5)}
@@ -179,7 +243,7 @@ export default function Home() {
               { texto: "Nunca" },
             ]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("frequenciaPesquisa", resposta);
               setPassoAtual(8);
             }}
             onVoltar={() => setPassoAtual(6)}
@@ -194,7 +258,7 @@ export default function Home() {
               { texto: "Não, seria totalmente novo para mim" },
             ]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("sabeUsarApp", resposta);
               setPassoAtual(9);
             }}
             onVoltar={() => setPassoAtual(7)}
@@ -212,8 +276,8 @@ export default function Home() {
             campoTexto={true}
             placeholderTexto="Outras funcionalidades que você gostaria..."
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta); // Aqui você pode salvar como string combinada
-              setPassoAtual(10); // ou finalizar
+              salvarResposta("funcionalidadesDesejadas", resposta); // Aqui você pode salvar como string combinada
+              setPassoAtual(10); 
             }}
             onVoltar={() => setPassoAtual(7)}
           />
@@ -223,7 +287,7 @@ export default function Home() {
             pergunta="Você recomendaria esse aplicativo para amigos e familiares?"
             opcoes={[{ texto: "Sim" }, { texto: "Talvez" }, { texto: "Não" }]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("recomendarApp", resposta);
               setPassoAtual(11);
             }}
             onVoltar={() => setPassoAtual(9)}
@@ -234,7 +298,7 @@ export default function Home() {
             pergunta="Gostaria de participar da fase de testes do aplicativo MediaSeg?"
             opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
             onAvancar={(resposta) => {
-              salvarResposta("familiaridade", resposta);
+              salvarResposta("querParticipar", resposta);
               setPassoAtual(12);
             }}
             onVoltar={() => setPassoAtual(10)}
