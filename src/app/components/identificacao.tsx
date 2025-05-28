@@ -211,7 +211,7 @@ export default function Identificacao({ onAvancar }: Props) {
             !formData.telefone ||
             !formData.provincia
           }
-          className="bg-[#0153A5] text-white px-6 py-2 rounded disabled:bg-gray-400"
+          className="bg-[#0153A5] text-white font-bold px-6 py-5 rounded disabled:bg-gray-400"
         >
           Avançar
         </button>

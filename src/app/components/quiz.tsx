@@ -33,14 +33,14 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
 
 
   return (
-    <div className="space-y-6">
-      <p className="text-3xl text-[#0153a5] font-semibold">{pergunta}</p>
+    <div className="w-full space-y-6">
+      <p className="sm:text-3xl text-2xl text-[#0153a5] font-semibold">{pergunta}</p>
       <div className="space-y-3">
         {opcoes.map((opcao, index) => (
           <div
             key={index}
             onClick={() => setRespostaSelecionada(index)}
-            className={`flex items-center justify-between border border-gray-400 text-gray-500 px-5 py-8 rounded cursor-pointer transition-all ${
+            className={`flex sm:text-xl  text-xs items-center justify-between border border-gray-400 text-gray-500 px-5 py-5 sm:py-8 rounded cursor-pointer transition-all ${
               respostaSelecionada === index ? "bg-[#0153a5] text-white"  // fundo azul + texto branco
               : "bg-white text-gray-500"   // fundo branco + texto cinza
             }`}
@@ -60,11 +60,11 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
         />
       )}
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-4">
       <button
         type="button"
         onClick={onVoltar}
-        className="bg-gray-600 text-white px-12 py-4 rounded hover:bg-gray-700"
+        className="bg-gray-600 text-white px-8 sm:px-12 py-4 rounded hover:bg-gray-700"
       >
         Voltar
       </button>
@@ -76,7 +76,7 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
           : respostaSelecionada === null
       }
         onClick={enviarResposta}
-        className="bg-[#0153a5] font-bold text-white px-12 py-4 rounded disabled:bg-gray-400"
+        className="bg-[#0153a5] font-bold text-white px-6 sm:px-10 py-4 rounded disabled:bg-gray-400"
       >
         Avançar
       </button>

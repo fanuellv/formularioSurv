@@ -7,6 +7,18 @@ import {
   FaRegLightbulb,
   FaCheckCircle,
 } from "react-icons/fa";
+import { RiUserFollowFill } from "react-icons/ri";
+import { RiUserUnfollowFill } from "react-icons/ri";
+import { GiLifeBar } from "react-icons/gi";
+import { FaCarCrash } from "react-icons/fa";
+import { FaHeartCirclePlus } from "react-icons/fa6";
+import { MdGppMaybe } from "react-icons/md";
+import { FaFrownOpen } from "react-icons/fa";
+import { FaStickyNote } from "react-icons/fa";
+import { RiSecurePaymentLine } from "react-icons/ri";
+import { MdDocumentScanner } from "react-icons/md";
+import { MdCalendarMonth } from "react-icons/md";
+import { IoIosNotifications } from "react-icons/io";
 
 import Pergunta from "@/app/components/quiz";
 import Identificacao, { FormDataId } from "@/app/components/identificacao";
@@ -74,7 +86,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex w-full bg-white flex-col items-center justify-center space-y-10 h-screen p-4">
+    <div className="flex w-full bg-white flex-col items-center justify-center space-y-10 h-screen  sm:px-4 sm:py-4  px-4 py-10 overflow-hidden ">
       <div className="absolute top-5 flex gap-1 w-full mb-8 p-4">
         {Array.from({ length: 12 }).map((_, i) => (
           <div
@@ -86,7 +98,7 @@ export default function Home() {
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-6">
+      <form onSubmit={handleSubmit} className="max-w-xl  sm:max-w-2xl space-y-5 overflow-hidden">
         {passoAtual === 1 && (
           <Identificacao
             onAvancar={(dados: FormDataId) => {
@@ -121,7 +133,7 @@ export default function Home() {
       <Pergunta
         key="pergunta-seguro"
         pergunta="Você possui seguro?"
-        opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
+        opcoes={[{ texto: "Sim" ,icon:<RiUserFollowFill />}, { texto: "Não" ,icon:<RiUserUnfollowFill />}]}
         onAvancar={(resposta) => {
           salvarResposta("possuiSeguro", resposta);
           if (resposta === "Sim") {
@@ -137,9 +149,9 @@ export default function Home() {
         key="tipo-seguro" // ← chave única aqui força o React a resetar
         pergunta="Qual tipo de seguro você possui?"
         opcoes={[
-          { texto: "Seguro de Vida" },
-          { texto: "Seguro Automóvel" },
-          { texto: "Seguro Saúde" },
+          { texto: "Seguro de Vida" ,icon:<GiLifeBar />},
+          { texto: "Seguro Automóvel" ,icon:<FaCarCrash />},
+          { texto: "Seguro Saúde", icon:<FaHeartCirclePlus />},
         ]}
         campoTexto={true}
         placeholderTexto="Indique o tipo de seguro..."
@@ -163,7 +175,7 @@ export default function Home() {
         {passoAtual === 4 && (
           <Pergunta
             pergunta="Você já usou aplicativos ou plataformas online para contratar ou comparar seguros?"
-            opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
+            opcoes={[{ texto: "Sim" ,icon:<RiUserFollowFill />}, { texto: "Não" ,icon:<RiUserUnfollowFill />}]}
             onAvancar={(resposta) => {
               salvarResposta("usaPlataformas", resposta);
               setPassoAtual(5);
@@ -179,7 +191,7 @@ export default function Home() {
         {passoAtual === 5 && (
           <Pergunta
             pergunta="Costuma usar aplicativos para contratar ou comparar outros serviços financeiros (como bancos, crédito, investimentos)?"
-            opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
+            opcoes={[{ texto: "Sim",icon:<RiUserFollowFill /> }, { texto: "Não" , icon:<RiUserUnfollowFill />}]}
             onAvancar={(resposta) => {
               salvarResposta("usaFinanceiros", resposta);
               setPassoAtual(6);
@@ -192,9 +204,9 @@ export default function Home() {
           <Pergunta
             pergunta="Se existisse um app que comparasse preços, coberturas e benefícios de diferentes seguradoras em Angola, você usaria?"
             opcoes={[
-              { texto: "Sim, com certeza" },
-              { texto: "Talvez" },
-              { texto: "Não usaria" },
+              { texto: "Sim, com certeza",icon:<RiUserFollowFill /> },
+              { texto: "Talvez" ,icon:<MdGppMaybe />},
+              { texto: "Não usaria", icon:<RiUserUnfollowFill />},
             ]}
             onAvancar={(resposta) => {
               salvarResposta("usariaApp", resposta);
@@ -207,10 +219,10 @@ export default function Home() {
           <Pergunta
             pergunta="Com que frequência você pesquisaria sobre seguros através de um aplicativo como esse?"
             opcoes={[
-              { texto: "Sempre que precisasse" },
-              { texto: "Uma vez por mês" },
-              { texto: "Raramente" },
-              { texto: "Nunca" },
+              { texto: "Sempre que precisasse",icon:<RiUserFollowFill /> },
+              { texto: "Uma vez por mês" ,icon:<MdCalendarMonth />},
+              { texto: "Raramente",icon:<MdGppMaybe />},
+              { texto: "Nunca" ,icon:<FaFrownOpen />},
             ]}
             onAvancar={(resposta) => {
               salvarResposta("frequenciaPesquisa", resposta);
@@ -223,9 +235,9 @@ export default function Home() {
           <Pergunta
             pergunta="Você saberia utilizar um aplicativo para contratar ou gerenciar seus seguros?"
             opcoes={[
-              { texto: "Sim, sem dificuldades" },
-              { texto: "Talvez precisasse de ajuda" },
-              { texto: "Não, seria totalmente novo para mim" },
+              { texto: "Sim, sem dificuldades",icon:<RiUserFollowFill /> },
+              { texto: "Talvez precisasse de ajuda",icon:<MdGppMaybe /> },
+              { texto: "Não, seria totalmente novo para mim",icon:<FaFrownOpen /> },
             ]}
             onAvancar={(resposta) => {
               salvarResposta("sabeUsarApp", resposta);
@@ -238,10 +250,10 @@ export default function Home() {
           <Pergunta
             pergunta="Que funcionalidades você gostaria de ver nesse aplicativo?"
             opcoes={[
-              { texto: "Lembretes de renovação de seguro" },
-              { texto: "Comparação de preços e coberturas" },
-              { texto: "Acesso a documentos digitais (Apolices)" },
-              { texto: "Notificações sobre promoções" },
+              { texto: "Lembretes de renovação de seguro" ,icon:<FaStickyNote />},
+              { texto: "Comparação de preços e coberturas",icon:<RiSecurePaymentLine /> },
+              { texto: "Acesso a documentos digitais (Apolices)",icon:<MdDocumentScanner /> },
+              { texto: "Notificações sobre promoções",icon:<IoIosNotifications /> },
             ]}
             campoTexto={true}
             placeholderTexto="Outras funcionalidades que você gostaria..."
@@ -255,7 +267,7 @@ export default function Home() {
         {passoAtual === 10 && (
           <Pergunta
             pergunta="Você recomendaria esse aplicativo para amigos e familiares?"
-            opcoes={[{ texto: "Sim" }, { texto: "Talvez" }, { texto: "Não" }]}
+            opcoes={[{ texto: "Sim",icon:<RiUserFollowFill /> }, { texto: "Talvez",icon:<MdGppMaybe />  }, { texto: "Não",icon:<FaFrownOpen /> }]}
             onAvancar={(resposta) => {
               salvarResposta("recomendarApp", resposta);
               setPassoAtual(11);
@@ -266,7 +278,7 @@ export default function Home() {
         {passoAtual === 11 && (
           <Pergunta
             pergunta="Gostaria de participar da fase de testes do aplicativo MediaSeg?"
-            opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
+            opcoes={[{ texto: "Sim",icon:<RiUserFollowFill /> }, { texto: "Não",icon:<FaFrownOpen /> }]}
             onAvancar={(resposta) => {
               salvarResposta("querParticipar", resposta);
               setPassoAtual(12);
