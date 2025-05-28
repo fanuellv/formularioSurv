@@ -33,6 +33,8 @@ type FormData = {
 
 
 export default function Home() {
+
+  
   const [passoAtual, setPassoAtual] = useState(1);
   const [formData, setFormData] = useState<FormData>({});
   const [mostrarPerguntaExtra, setMostrarPerguntaExtra] = useState(false);
@@ -117,6 +119,7 @@ export default function Home() {
   <>
     {!mostrarPerguntaExtra ? (
       <Pergunta
+        key="pergunta-seguro"
         pergunta="Você possui seguro?"
         opcoes={[{ texto: "Sim" }, { texto: "Não" }]}
         onAvancar={(resposta) => {
@@ -124,13 +127,14 @@ export default function Home() {
           if (resposta === "Sim") {
             setMostrarPerguntaExtra(true);
           } else {
-            setPassoAtual(4); // pula para próxima pergunta direto
+            setPassoAtual(4);
           }
         }}
         onVoltar={() => setPassoAtual(2)}
       />
     ) : (
       <Pergunta
+        key="tipo-seguro" // ← chave única aqui força o React a resetar
         pergunta="Qual tipo de seguro você possui?"
         opcoes={[
           { texto: "Seguro de Vida" },
@@ -138,20 +142,20 @@ export default function Home() {
           { texto: "Seguro Saúde" },
         ]}
         campoTexto={true}
-            placeholderTexto="Indique o tipo de seguro..."
-            onAvancar={(resposta) => {
-              salvarResposta("tipoSeguro", resposta); // Aqui você pode salvar como string combinada
-              setPassoAtual(10); 
-              
-            }}
-            onVoltar={() => {
-              setMostrarPerguntaExtra(false);
-              setPassoAtual(3);
-            }}
+        placeholderTexto="Indique o tipo de seguro..."
+        onAvancar={(resposta) => {
+          salvarResposta("tipoSeguro", resposta);
+          setPassoAtual(4);
+        }}
+        onVoltar={() => {
+          setMostrarPerguntaExtra(false);
+          setPassoAtual(3);
+        }}
       />
     )}
   </>
 )}
+
 
 
 
