@@ -63,37 +63,6 @@ export default function Home() {
       alert("Erro inesperado.");
     }
   };
-  
-
-  const avancar = async () => {
-    if (passoAtual < 12) {
-      setPassoAtual(passoAtual + 1);
-    } else {
-      try {
-        const response = await fetch("/api/formulario", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        const result = await response.json();
-  
-        if (response.ok) {
-          alert("Formulário enviado com sucesso!");
-          console.log("Dados salvos:", result);
-          // Aqui você pode limpar ou redirecionar
-        } else {
-          alert("Erro ao enviar: " + result.error);
-        }
-      } catch (error) {
-        console.error("Erro:", error);
-        alert("Erro inesperado");
-      }
-    }
-  }
-  ;
 
   const salvarResposta = (campo: keyof FormData, resposta: string | number) => {
     setFormData((prev) => ({
