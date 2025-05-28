@@ -24,3 +24,41 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes grow-shrink {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.grow-shrink {
+  animation: grow-shrink 2s ease-in-out infinite;
+}
+
+/* globals.css */
+
+input[type="range"] {
+  @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  height: 1rem;
+  width: 1rem;
+  background-color: #0153A5;
+  border-radius: 9999px;
+  border: 2px solid white;
+  margin-top: -6px; /* alinha verticalmente no Chrome */
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 1rem;
+  width: 1rem;
+  background-color: #0153A5;
+  border-radius: 9999px;
+  border: 2px solid white;
+  cursor: pointer;
+}
