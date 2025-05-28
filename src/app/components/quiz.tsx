@@ -22,16 +22,12 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
         const [respostaTexto, setRespostaTexto] = useState("");
       
         const enviarResposta = () => {
-          if (campoTexto) {
-            if (respostaTexto.trim() !== "") {
-              console.log("Enviando texto:", respostaTexto.trim());
-              onAvancar(respostaTexto.trim());
-            }
-          } else {
-            if (respostaSelecionada !== null) {
-              console.log("Enviando opção:", opcoes![respostaSelecionada].texto);
-              onAvancar(opcoes![respostaSelecionada].texto);
-            }
+          if (campoTexto && respostaTexto.trim() !== "") {
+            console.log("Enviando texto:", respostaTexto.trim());
+            onAvancar(respostaTexto.trim());
+          } else if (respostaSelecionada !== null) {
+            console.log("Enviando opção:", opcoes[respostaSelecionada].texto);
+            onAvancar(opcoes[respostaSelecionada].texto);
           }
         };
 
@@ -56,7 +52,7 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
       </div>
       {campoTexto && (
         <textarea
-          className="w-full border border-gray-400 rounded p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0153a5]"
+          className="w-full border border-gray-400 h-20 rounded p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0153a5]"
           placeholder={placeholderTexto}
           value={respostaTexto}
           onChange={(e) => setRespostaTexto(e.target.value)}
@@ -76,8 +72,8 @@ export default function Pergunta({ pergunta, opcoes, onAvancar, onVoltar,campoTe
       <button
        disabled={
         campoTexto
-    ? respostaTexto.trim() === ""  // só depende do texto
-    : respostaSelecionada === null
+          ? respostaTexto.trim() === "" && respostaSelecionada === null
+          : respostaSelecionada === null
       }
         onClick={enviarResposta}
         className="bg-[#0153a5] font-bold text-white px-12 py-4 rounded disabled:bg-gray-400"

@@ -36,9 +36,6 @@ export default function Home() {
   const [passoAtual, setPassoAtual] = useState(1);
   const [formData, setFormData] = useState<FormData>({});
   const [mostrarPerguntaExtra, setMostrarPerguntaExtra] = useState(false);
-
-  const [temSeguro, setTemSeguro] = useState<string | null>(null);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 🔒 Impede o reload da página
   
@@ -106,7 +103,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center space-y-10 h-screen p-4">
+    <div className="flex w-full bg-white flex-col items-center justify-center space-y-10 h-screen p-4">
       <div className="absolute top-5 flex gap-1 w-full mb-8 p-4">
         {Array.from({ length: 12 }).map((_, i) => (
           <div
@@ -171,17 +168,17 @@ export default function Home() {
           { texto: "Seguro Automóvel" },
           { texto: "Seguro Saúde" },
         ]}
-        onAvancar={(resposta) => {
-          salvarResposta("tipoSeguro", resposta);
-          setMostrarPerguntaExtra(false);
-          setPassoAtual(4);
-        }}
-        onVoltar={() => {
-          setMostrarPerguntaExtra(false);
-          setPassoAtual(3);
-        }}
-        campoTexto
-        placeholderTexto="Indique o tipo de seguro..."
+        campoTexto={true}
+            placeholderTexto="Indique o tipo de seguro..."
+            onAvancar={(resposta) => {
+              salvarResposta("tipoSeguro", resposta); // Aqui você pode salvar como string combinada
+              setPassoAtual(10); 
+              
+            }}
+            onVoltar={() => {
+              setMostrarPerguntaExtra(false);
+              setPassoAtual(3);
+            }}
       />
     )}
   </>
@@ -199,7 +196,7 @@ export default function Home() {
               setPassoAtual(5);
             }}
             onVoltar={() => {
-              if (temSeguro === "Sim") {
+              if (formData.possuiSeguro === "Sim") {
                 setMostrarPerguntaExtra(true);
               }
               setPassoAtual(3);
@@ -305,25 +302,71 @@ export default function Home() {
           />
         )}
 
-        {passoAtual === 12 && (
-          <>
-            <div className="text-center">
-              <h2 className="text-xl font-bold">Confirme os seus dados</h2>
-              <pre className="text-left bg-gray-100 p-4 rounded">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-              <p className="text-gray-600 mt-4">
-                Clique em Enviar para finalizar.
-              </p>
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-            >
-              Enviar
-            </button>
-          </>
-        )}
+{passoAtual === 12 && (
+  <>
+    <div className="text-center text-gray-700 max-w-lg mx-auto p-4  rounded ">
+      <h2 className="text-2xl font-bold mb-4">Confirme os seus dados</h2>
+
+      {/* Exibe os dados com formatação */}
+      <div className="text-left bg-white p-4 rounded border border-gray-700 max-h-64 overflow-auto">
+        {Object.entries(formData).map(([chave, valor]) => (
+          <p key={chave} className="mb-2">
+            <strong className="capitalize">{chave.replace(/([A-Z])/g, ' $1')}:</strong> {valor?.toString() || 'Não informado'}
+          </p>
+        ))}
+      </div>
+
+      <p className="text-gray-600 mt-4 mb-6">
+        Clique em <strong>Enviar</strong> para finalizar ou <strong>Voltar</strong> para revisar suas respostas.
+      </p>
+
+      <div className="flex justify-center gap-4">
+        <button
+          type="button"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-12 py-4 rounded transition"
+          onClick={() => {
+            // Limpa os dados que quiser (aqui exemplo: limpar as respostas específicas)
+            setFormData(prev => {
+              const novo = { ...prev };
+              // Limpar campos que deseja, ou todos do passo 12
+              
+              delete novo.nome;
+              delete novo.faixaEtaria;
+              delete novo.genero;
+              delete novo.email;
+              delete novo.telefone;
+              delete novo.provincia;
+              delete novo.familiaridade;
+              delete novo.possuiSeguro;
+              delete novo.tipoSeguro;
+              delete novo.usaPlataformas;
+              delete novo.usariaApp;
+              delete novo.frequenciaPesquisa;
+              delete novo.sabeUsarApp;
+              delete novo.funcionalidadesDesejadas;
+              delete novo.recomendarApp;
+              delete novo.querParticipar;
+              // Você pode limpar tudo se quiser:
+              // return {};
+              return novo;
+            });
+            setPassoAtual(1);
+          }}
+        >
+          Recomeçar
+        </button>
+
+        <button
+          type="submit"
+          className="bg-[#0153a5] font-bold text-white px-12 py-4 rounded transition"
+        >
+          Enviar
+        </button>
+      </div>
+    </div>
+  </>
+)}
+
       </form>
     </div>
   );

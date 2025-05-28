@@ -45,8 +45,8 @@ export default function Identificacao({ onAvancar }: Props) {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Vamos começar pelo seu perfil</h1>
+    <div className="text-gray-500 text-xs sm:text-sm max-w-sm sm:max-w-xl mx-auto space-y-6 p-2">
+      <h1 className="text-2xl text-gray-700 font-bold">Ajude-nos a Construir o Futuro: Participe do Nosso Inquérito!</h1>
 
       {/* Nome */}
       <div className="flex flex-col">

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from 'next/link';
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -21,12 +23,12 @@ export default function Home() {
           transform: `scale(${scale})`,
           transition: "transform 1s ease-in-out",
         }}
-        className="mb-12"
+        className="mb-12 flex items-center justify-center"
       >
-        <Image src="/img/logo2.svg" width={200} height={200} alt="Logo" />
+        <Image src="/img/logo2.svg" width={200} height={200} alt="Logo" className="w-1/2" />
       </div>
       <p
-        className="text-white w-2/5 text-2xl text-center"
+        className="text-white w-3/5 sm:text-2xl text-center"
         
       >
         Faça parte da revolução dos seguros em Angola!{" "}
@@ -36,7 +38,18 @@ export default function Home() {
         e ajude-nos a transformar o futuro dos seguros.
       </p>
 
-      <button className="text-[#0153a5] font-semibold bg-white rounded p-2 text-3xl hover:text-blue-400">Participar Agora</button>
+      <Link href="/identificacao" passHref>
+  <button className="
+    text-[#0153a5] font-semibold bg-white rounded-lg px-6 py-3 sm:text-3xl
+    border border-blue-500
+    transition duration-300 ease-in-out
+    hover:text-blue-500 hover:scale-110 hover:rotate-3 hover:shadow-lg
+    active:text-blue-700 active:scale-95 active:rotate-0 active:shadow-md
+    cursor-pointer
+  ">
+    Participar Agora
+  </button>
+</Link>
     </div>
   );
 }
